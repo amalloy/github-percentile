@@ -14,7 +14,7 @@
 
 (defroutes main-routes
   (GET "/:who" [who]
-    (str "Github percentile for " who ": " (percentile who))))
+    (str (percentile who) "% of Github employees have had a Github account longer than " who " has.")))
 
 (defn -main [& args]
   (run-jetty #'main-routes {:port (Integer/parseInt (System/getenv "PORT"))}))
