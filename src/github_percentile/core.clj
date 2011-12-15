@@ -2,6 +2,7 @@
   (:use [compojure.core :only [defroutes GET POST]]
         [compojure.route :only [resources]]
         [ring.adapter.jetty :only [run-jetty]]
+        [ring.middleware.params :only [wrap-params]]
         [hiccup.core :only [html]]
         [hiccup.page-helpers :only [doctype include-css]]
         [hiccup.form-helpers :only [form-to label text-field submit-button]])
@@ -52,7 +53,7 @@
        (layout [:div {:id "result"}
                 [:p (message (percentile who org) who org)]]))
   (POST "/" {params :params}
-        (response/redirect (str "/" (:who params))))
+        (response/redirect (str "/" (params "who"))))
   (GET "/" [params]
        (layout [:div {:id "welcome"}
                 (form-to [:post "/"]
@@ -61,4 +62,5 @@
                          (submit-button "Calculate"))])))
 
 (defn -main [& args]
-  (run-jetty #'app {:port (Integer. (or (System/getenv "PORT") "8080"))}))
+  (run-jetty (wrap-params #'app)
+             {:port (Integer. (or (System/getenv "PORT") "8080"))}))
