@@ -4,7 +4,9 @@
   (:require [tentacles.orgs :as orgs]
             [tentacles.users :as users]))
 
-(def members (memoize (fn members [org] (orgs/members org))))
+(defonce members (memoize (fn members [org] (orgs/members org))))
+
+(defonce user-id (memoize (fn [username] (:id (users/user username)))))
 
 (defn percentile
   "If you were a Github employee, what percentile would your user ID be?"
