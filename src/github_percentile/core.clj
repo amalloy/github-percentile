@@ -28,6 +28,12 @@
   (format "%s%% of %s employees have had an account longer than %s has."
           number (or org "Github") who))
 
+(defn request-form []
+  (form-to [:post "/"]
+           (label "who" "Github user name") 
+           (text-field "who")
+           (submit-button "Calculate")))
+
 (defn layout [body]
   (html
    (doctype :html5)
@@ -36,30 +42,29 @@
     [:title "Github Percentile"]
     (include-css "/stylesheets/style.css"
                  "/stylesheets/base.css"
-                 "/stylesheets/skeleton.css"
-                 "/stylesheets/screen.css")
+                 "/stylesheets/skeleton.css")
     (include-css "http://fonts.googleapis.com/css?family=Electrolize")]
    [:body
     [:div {:id "header"}
-     [:h1 {:class "container"} "Github Percentile"]]
+     [:h1 {:class "container"}
+      [:a {:href "/"} "Github Percentile"]]]
     [:div {:id "content" :class "container"} body]]))
 
 (defroutes app
   (resources "/")
   (GET "/:who" [who]
        (layout [:div {:id "result"}
-                [:p (message (percentile who) who)]]))
+                [:p (message (percentile who) who)]
+                (request-form)]))
   (GET "/:who/:org" [who org] ; easter egg!
        (layout [:div {:id "result"}
-                [:p (message (percentile who org) who org)]]))
+                [:p (message (percentile who org) who org)]
+                (request-form)]))
   (POST "/" {params :params}
         (response/redirect (str "/" (params "who"))))
   (GET "/" [params]
        (layout [:div {:id "welcome"}
-                (form-to [:post "/"]
-                         (label "who" "Github user name") 
-                         (text-field "who")
-                         (submit-button "Calculate"))])))
+                (request-form)])))
 
 (defn -main [& args]
   (run-jetty (wrap-params #'app)
