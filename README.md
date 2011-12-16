@@ -1,13 +1,9 @@
-# github-percentile
+# Github Percentile
 
-I'm an app. I sure don't do much.
-
-## Usage
-
-FIXME
+If you were a Github employee, what percentile would your user ID be?
 
 ## License
 
-Copyright (C) 2011 FIXME
+Copyright © 2011 Alan Malloy and Phil Hagelberg
 
 Distributed under the Eclipse Public License, the same as Clojure.
