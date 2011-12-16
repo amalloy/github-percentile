@@ -64,18 +64,18 @@
                           (format "\"%s\": %s" (name k) (pr-str v))))
                 "}")})
   (GET "/:who" [who]
-       (layout [:div {:id "result"}
-                [:p (message (percentile who) who)]
-                (request-form)]))
-  (GET "/:who/:org" [who org] ; easter egg!
-       (layout [:div {:id "result"}
-                [:p (message (percentile who org) who org)]
-                (request-form)]))
+    (layout [:div {:id "result"}
+             [:p (message (percentile who) who)]
+             (request-form)]))
+  (GET "/:who/:org" [who org]           ; easter egg!
+    (layout [:div {:id "result"}
+             [:p (message (percentile who org) who org)]
+             (request-form)]))
   (POST "/" {params :params}
-        (response/redirect (str "/" (params "who"))))
+    (response/redirect (str "/" (params "who"))))
   (GET "/" [params]
-       (layout [:div {:id "welcome"}
-                (request-form)])))
+    (layout [:div {:id "welcome"}
+             (request-form)])))
 
 (defn -main [& args]
   (run-jetty (wrap-params #'app)
