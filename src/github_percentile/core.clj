@@ -25,8 +25,8 @@
   ([username] (percentile username "github")))
 
 (defn message [number who & [org]]
-  (format "%s%% of %s employees have had an account longer than %s has."
-          number (or org "Github") who))
+  (format "%s%% of %s employees have had an account longer than <a href='http://github.com/%s'>%s</a> has."
+          number (or org "Github") who who))
 
 (defn request-form []
   (form-to [:post "/"]
