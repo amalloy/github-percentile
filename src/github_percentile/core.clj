@@ -7,6 +7,7 @@
         [hiccup.page-helpers :only [doctype include-css]]
         [hiccup.form-helpers :only [form-to label text-field submit-button]])
   (:require [clojure.java.io :as io]
+            [clojure.string :as s]
             [tentacles.orgs :as orgs]
             [tentacles.users :as users]
             [ring.util.response :as response]))
@@ -55,6 +56,13 @@
 
 (defroutes app
   (resources "/")
+  (GET "/api/:who/:org" [who org]
+    {:status 200 :headers {"Content-Type" "application/json"}
+     :body (str "{"
+                (s/join ", "
+                        (for [[k v] {:user who :org org :percentile (percentile who org)}]
+                          (format "\"%s\": %s" (name k) (pr-str v))))
+                "}")})
   (GET "/:who" [who]
        (layout [:div {:id "result"}
                 [:p (message (percentile who) who)]

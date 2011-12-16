@@ -4,6 +4,7 @@
                  [hiccup "0.3.6"]
                  [compojure "1.0.0-RC1"]
                  [tentacles "0.1.3"]
-                 [ring "1.0.0"]]
+                 [ring "1.0.0"]
+                 [useful "0.7.5"]]
   :main github-percentile.core
   :checksum-deps true)
