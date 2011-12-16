@@ -52,6 +52,15 @@
      [:p "Get " [:a {:href "https://github.com/amalloy/github-percentile"}
                  "the source"] "."]]]))
 
+(defn wrap-404 [handler]
+  (fn [request]
+    (try
+      (handler request)
+      (catch Throwable t
+        {:status 404 :body (layout [:div.error
+                                    [:h3 "No such user"]
+                                    (request-form)])}))))
+
 (defroutes app
   (resources "/")
   (GET "/api/:who/:org" [who org]
@@ -62,19 +71,19 @@
                           (format "\"%s\": %s" (name k) (pr-str v))))
                 "}")})
   (GET "/:who" [who]
-    (layout [:div {:id "result"}
+    (layout [:div#result
              [:p (message (percentile who) who)]
              (request-form)]))
   (GET "/:who/:org" [who org]           ; easter egg!
-    (layout [:div {:id "result"}
+    (layout [:div#result
              [:p (message (percentile who org) who org)]
              (request-form)]))
   (POST "/" {params :params}
     (response/redirect (str "/" (params "who"))))
   (GET "/" [params]
-    (layout [:div {:id "welcome"}
+    (layout [:div#welcome
              (request-form)])))
 
 (defn -main [& args]
-  (run-jetty (wrap-params #'app)
+  (run-jetty (wrap-404 (wrap-params #'app))
              {:port (Integer. (or (System/getenv "PORT") "8080"))}))
