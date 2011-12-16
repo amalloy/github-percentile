@@ -3,8 +3,7 @@
         [compojure.route :only [resources]]
         [ring.adapter.jetty :only [run-jetty]]
         [ring.middleware.params :only [wrap-params]]
-        [hiccup.core :only [html]]
-        [hiccup.page-helpers :only [doctype include-css]]
+        [hiccup.page-helpers :only [html5 doctype include-css]]
         [hiccup.form-helpers :only [form-to label text-field submit-button]])
   (:require [clojure.java.io :as io]
             [clojure.string :as s]
@@ -36,8 +35,7 @@
            (submit-button "Calculate")))
 
 (defn layout [body]
-  (html
-   (doctype :html5)
+  (html5
    [:head
     [:meta {:charset "utf-8"}]
     [:title "Github Percentile"]
@@ -46,11 +44,11 @@
                  "/stylesheets/skeleton.css")
     (include-css "http://fonts.googleapis.com/css?family=Electrolize")]
    [:body
-    [:div {:id "header"}
-     [:h1 {:class "container"}
+    [:div#header
+     [:h1.container
       [:a {:href "/"} "Github Percentile"]]]
-    [:div {:id "content" :class "container"} body]
-    [:div {:id "footer" :class "container"}
+    [:div#content.container body]
+    [:div#footer.container
      [:p "Get " [:a {:href "https://github.com/amalloy/github-percentile"}
                  "the source"] "."]]]))
 
