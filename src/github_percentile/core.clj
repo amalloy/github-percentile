@@ -61,6 +61,8 @@
     (try
       (handler request)
       (catch Throwable t
+        (binding [*out* *err*]
+          (.printStackTrace t))
         {:status 404 :body (layout [:div.error
                                     [:h3 "No such user"]
                                     (request-form)])}))))
