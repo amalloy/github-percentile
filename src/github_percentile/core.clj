@@ -12,9 +12,9 @@
             [tentacles.users :as users]
             [ring.util.response :as response]))
 
-(defonce members (memoize (fn members [org] (orgs/members org))))
+(defonce members (memoize orgs/members))
 
-(defonce user-id (memoize (fn [username] (:id (users/user username)))))
+(defonce user-id (memoize (comp :id users/user)))
 
 (defn percentile
   "If you were a Github employee, what percentile would your user ID be?"
