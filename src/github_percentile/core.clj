@@ -30,7 +30,7 @@
 
 (defn request-form []
   (form-to [:post "/"]
-           (label "who" "Github user name") 
+           (label "who" "Github user name")
            (text-field "who")
            (submit-button "Calculate")))
 
@@ -48,7 +48,10 @@
     [:div {:id "header"}
      [:h1 {:class "container"}
       [:a {:href "/"} "Github Percentile"]]]
-    [:div {:id "content" :class "container"} body]]))
+    [:div {:id "content" :class "container"} body]
+    [:div {:id "footer" :class "container"}
+     [:p "Get " [:a {:href "https://github.com/amalloy/github-percentile"}
+                 "the source"] "."]]]))
 
 (defroutes app
   (resources "/")
