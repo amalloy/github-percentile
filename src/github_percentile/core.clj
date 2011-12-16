@@ -15,6 +15,10 @@
 
 (defonce user-id (memoize (comp :id users/user)))
 
+(defn profile-link [user]
+  (format "<a href='http://github.com/%s'>%s</a>"
+          user user))
+
 (defn percentile
   "If you were a Github employee, what percentile would your user ID be?"
   ([username org]
@@ -25,8 +29,8 @@
   ([username] (percentile username "github")))
 
 (defn message [number who & [org]]
-  (format "%s%% of %s employees have had an account longer than <a href='http://github.com/%s'>%s</a> has."
-          number (or org "Github") who who))
+  (format "%s%% of %s employees have had an account longer than %s has."
+          number (or org "Github") (profile-link who)))
 
 (defn request-form []
   (form-to [:post "/"]
@@ -61,6 +65,18 @@
                                     [:h3 "No such user"]
                                     (request-form)])}))))
 
+(defn ranks [org]
+  (layout [:div#result
+           [:h2 "Rankings for the " (profile-link org) " organization:"]
+           (request-form)
+           [:table
+            [:tr
+             [:td "Username"] [:td "Github user number"]
+             (for [{:keys [login id]} (sort-by :id (members org))]
+               [:tr
+                [:td (profile-link login)]
+                [:td id]])]]]))
+
 (defroutes app
   (resources "/")
   (GET "/api/:who/:org" [who org]
@@ -70,10 +86,15 @@
                         (for [[k v] {:user who :org org :percentile (percentile who org)}]
                           (format "\"%s\": %s" (name k) (pr-str v))))
                 "}")})
+  (GET "/rank/:org" [org]
+    (ranks org))
   (GET "/:who" [who]
-    (layout [:div#result
-             [:p (message (percentile who) who)]
-             (request-form)]))
+    (let [user (users/user who)]
+      (if (= "Organization" (:type user))
+        (ranks who)
+        (layout [:div#result
+                 [:p (message (percentile who) who)]
+                 (request-form)]))))
   (GET "/:who/:org" [who org]           ; easter egg!
     (layout [:div#result
              [:p (message (percentile who org) who org)]
